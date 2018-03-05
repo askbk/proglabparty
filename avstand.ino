@@ -1,39 +1,39 @@
-int echoPin = 6;
-int triggerPin=7;
+int echoPin1 = 6;
+int triggerPin1=7;
 
 
-int echoPin = 2;
-int triggerPin=3;
+int echoPin2 = 2;
+int triggerPin2=3;
 
 void setup() {
   Serial.begin(9600);
   
-  pinMode(triggerPin,OUTPUT);
-  pinMode(echoPin, INPUT);
+  pinMode(triggerPin1,OUTPUT);
+  pinMode(echoPin1, INPUT);
+  pinMode(triggerPin2,OUTPUT);
+  pinMode(echoPin2, INPUT);
   
 
 }
 
 void loop() {
 
-  Serial.println("Avstand "+String(sjekk_avstand()));
-  //Serial.println("Avstand1 "+String(sjekk_avstand()));
-  
+  Serial.println("Avstand 1: "+String(sjekk_avstand(echoPin1, triggerPin1)));
+  Serial.println("Avstand 2: "+String(sjekk_avstand(echoPin2, triggerPin2)));
+
+ 
 
 }
 
-double sjekk_avstand(){
-  digitalWrite(triggerPin, 0);
+float sjekk_avstand(int ekko,int  trigger){
+  digitalWrite(trigger, 0);
   delayMicroseconds(2);
-
-  digitalWrite(triggerPin,1);
+  digitalWrite(trigger,1);
   delayMicroseconds(10);
-
-  digitalWrite(triggerPin, 0);
-
-  long duration = pulseIn(echoPin, 1);
+  digitalWrite(trigger, 0);
+  long duration = pulseIn(ekko, 1);
   float distance = duration * 0.00017;
   //Serial.println(distance);
-  
-  return (distance1, distance2);
+  return (distance);
 }
+
