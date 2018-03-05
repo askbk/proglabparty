@@ -34,8 +34,7 @@ ZumoReflectanceSensorArray sensors;
 
 
  
-void setup()
-{
+void setup() {
    Serial.begin(9600);
    pinMode(trigPin, OUTPUT);
    pinMode(echoPin, INPUT);
@@ -43,37 +42,32 @@ void setup()
    button.waitForButton();
 }
 
-void loop(){
+void loop() {
   
       sensors.read(sensor_values);     
       
-      if (sensor_values[0] > QTR_THRESHOLD)
-      {
+      if (sensor_values[0] > QTR_THRESHOLD) {
         // if leftmost sensor detects line, reverse and turn to the right
         motors.setSpeeds(-REVERSE_SPEED, -REVERSE_SPEED);
         delay(REVERSE_DURATION);
         motors.setSpeeds(TURN_SPEED, -TURN_SPEED);
         delay(TURN_DURATION);
         motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
-      }
-      else if (sensor_values[5] > QTR_THRESHOLD)
-      {
+      } else if (sensor_values[5] > QTR_THRESHOLD) {
         // if rightmost sensor detects line, reverse and turn to the left
         motors.setSpeeds(-REVERSE_SPEED, -REVERSE_SPEED);
         delay(REVERSE_DURATION);
         motors.setSpeeds(-TURN_SPEED, TURN_SPEED);
         delay(TURN_DURATION);
         motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
-      }
-      else
-      {
+      } else {
         // otherwise, go straight
         motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
         avstand();
       }
 }
 
-  void avstand() {
+void avstand() {
     //Avstandsmåleren sjekker om det er noe nærmere enn 60cm
    digitalWrite(trigPin, LOW); 
    delayMicroseconds(2);
@@ -85,9 +79,9 @@ void loop(){
    duration = pulseIn(echoPin, HIGH);
    Serial.println(duration);
    //Calculate the distance (in cm) based on the speed of sound.
-   distance = duration/58.2;
+   distance = duration / 58.2;
    
-   if (distance <= maximumRange && distance > minimumRange){
+   if (distance <= maximumRange && distance < minimumRange){
         delay(200);   
         motors.setSpeeds(TURN_SPEED, -TURN_SPEED);
         delay(REVERSE_DURATION);
