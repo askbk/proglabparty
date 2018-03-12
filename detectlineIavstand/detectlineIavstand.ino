@@ -10,20 +10,20 @@ Drive forward and turn left or right when border is detected
 #define LED 13
 #define echoPin 3 // Echo Pin
 #define triggerPin 6 // Trigger Pin
-float maximumRange = 0.3; // Maximum range needed
+float maximumRange = 0.5; // Maximum range needed
 float minimumRange = 0; // Minimum range needed
 
 // this might need to be tuned for different lighting conditions, surfaces, etc.
-#define QTR_THRESHOLD  1800 // 
+#define QTR_THRESHOLD  500 // 
   
 // these might need to be tuned for different motor types
 #define REVERSE_SPEED     200 // 0 is stopped, 400 is full speed
-#define TURN_SPEED        200
+#define TURN_SPEED        400
 #define FORWARD_SPEED     100
-#define SUPER_SPEED       200
+#define SUPER_SPEED       400
 #define SUPER_DURATION    10
 #define REVERSE_DURATION  200 // ms
-#define TURN_DURATION     400 // ms
+#define TURN_DURATION     200 // ms
 
 ZumoMotors motors;
 Pushbutton button(ZUMO_BUTTON); // pushbutton on pin 12
@@ -48,8 +48,14 @@ void loop(){
       
       
       sensors.read(sensor_values);   
-      
-      if (sensor_values[0] > QTR_THRESHOLD)
+      float distance = sjekk_avstand();
+      //Serial.println(distance);
+      //Sjekker noe forann, kjører på.
+      if (distance <= maximumRange && distance > minimumRange && sensor_values[0] > QTR_THRESHOLD && sensor_values[5] > QTR_THRESHOLD){   
+        motors.setSpeeds(SUPER_SPEED, SUPER_SPEED);
+        
+      }
+      else if (sensor_values[0] < QTR_THRESHOLD)
       {
         // if leftmost sensor detects line, reverse and turn to the right
         motors.setSpeeds(-REVERSE_SPEED, -REVERSE_SPEED);
@@ -58,7 +64,7 @@ void loop(){
         delay(TURN_DURATION);
         motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
       }
-      else if (sensor_values[5] > QTR_THRESHOLD)
+      else if (sensor_values[5] < QTR_THRESHOLD)
       {
         // if rightmost sensor detects line, reverse and turn to the left
         motors.setSpeeds(-REVERSE_SPEED, -REVERSE_SPEED);
@@ -67,14 +73,7 @@ void loop(){
         delay(TURN_DURATION);
         motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
       }
-      float distance = sjekk_avstand();
-      Serial.println(distance);
-      //Sjekker noe forann, kjører på.
-      if (distance <= maximumRange && distance > minimumRange && sensor_values[0] < QTR_THRESHOLD && sensor_values[5] < QTR_THRESHOLD){   
-        motors.setSpeeds(SUPER_SPEED, SUPER_SPEED);
-        delay(SUPER_DURATION);
-        motors.setSpeeds(0, 0);
-      }
+      
       else
       {
         // otherwise, go straight
