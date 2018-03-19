@@ -35,7 +35,7 @@ char msg[100];
 #define SUPER_DURATION    10
 #define REVERSE_DURATION  250 // ms
 #define TURN_DURATION     200 // ms
-char TACTIC = 'd';
+char TACTIC = 'o';
 boolean isGo = false;
 //Timer egenskaper
 #define STANDARD          1500
@@ -94,10 +94,16 @@ void setup(){
    pinMode(ekko_v, INPUT);
    sensors.init();
    //BT henting
-   while(!button.isPressed()&& !isGo){
+   while(!button.isPressed() && !isGo){
        updateBTSerial();  // Check if we have input on the BT serial port.
    }
-   motors.setSpeeds(FORWARD_SPEED, FORWARD_SPEED);
+   if(TACTIC = 'd'){    
+      motors.setSpeeds(SUPER_SPEED, SUPER_SPEED);
+   }
+   else if (TACTIC = 'o'){
+      motors.setSpeeds(TURN_SPEED, -TURN_SPEED);
+      TIMER_M = STANDARD;
+   }
 }
 
 void loop(){
@@ -115,9 +121,9 @@ void loop(){
               TIMER_M = 0;
           }else{     
               //Leser avstand høy, ven       
-              unsigned int tid_h = sonar_h.ping();
-              unsigned int tid_v = sonar_v.ping();
-              float avstand_h = sonar_h.convert_cm(tid_h);
+              unsigned int tid_h = sonar_h.ping();             
+              float avstand_h = sonar_h.convert_cm(tid_h);              
+              unsigned int tid_v = sonar_v.ping();               
               float avstand_v = sonar_v.convert_cm(tid_v);
               //Sjekker avstand h
               if (avstand_h>0){
