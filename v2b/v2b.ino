@@ -31,8 +31,8 @@ NewPing sonar_h(trigger1, ekko_h, maxDistace);
 NewPing sonar_v(trigger1, ekko_v, maxDistace);
 
 //BT
-const int txPin = 0; // Connected to tx on bt unit (port expander)
-const int rxPin = 1; // Connected to rx on bt unit (port expander)
+const int txPin = A4; // Connected to tx on bt unit
+const int rxPin = A5; // Connected to rx on bt unit
 
 
 
@@ -53,7 +53,7 @@ double TIMER_M = 0;
 double TIMER_S = STANDARD;
 double time1 = 0;
 double lastTime1 = 0;
-double dT=0;
+double dT = 0;
 ZumoMotors motors;
 Pushbutton button(ZUMO_BUTTON); // pushbutton on pin 12
 
@@ -95,10 +95,6 @@ void BTSerialMessageReceived(String msgString,int msgValue) {
 }
 
 void setup(){
-  mcp.begin(portExpPin);
-  mcp.pinMode(0, INPUT);
-  mcp.pinMode(1, INPUT);
-  
   Serial.begin(9600);
   PLabBTSerial btSerial(txPin, rxPin);  
   char msg[100];
@@ -107,8 +103,8 @@ void setup(){
   //Avstandsmåler
   pinMode(trigger1,OUTPUT);
   pinMode(ekko_m, INPUT);
-  //pinMode(ekko_h, INPUT);
-  //pinMode(ekko_v, INPUT);
+  pinMode(ekko_h, INPUT);
+  pinMode(ekko_v, INPUT);
   sensors.init();
   //BT henting
   while(!button.isPressed() && !isGo){
