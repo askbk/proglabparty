@@ -35,20 +35,21 @@ const int txPin = A4; // Connected to tx on bt unit
 const int rxPin = A5; // Connected to rx on bt unit
 
 
+char msg[100];
 
 // Diverse kjøreegenskaper
-#define REVERSE_SPEED     200 // 0 is stopped, 400 is full speed
+#define REVERSE_SPEED     400 // 0 is stopped, 400 is full speed
 #define TURN_SPEED        400
-#define FORWARD_SPEED     200
+#define FORWARD_SPEED     300
 #define SUPER_SPEED       400
 #define SUPER_DURATION    10
-#define REVERSE_DURATION  250 // ms
+#define REVERSE_DURATION  200 // ms
 #define TURN_DURATION     200 // ms
 
 char TACTIC = 'o';
 boolean isGo = false;
 //Timer egenskaper
-#define STANDARD          1500
+#define STANDARD          1000
 double TIMER_M = 0;
 double TIMER_S = STANDARD;
 double time1 = 0;
@@ -97,7 +98,6 @@ void BTSerialMessageReceived(String msgString,int msgValue) {
 void setup(){
   Serial.begin(9600);
   PLabBTSerial btSerial(txPin, rxPin);  
-  char msg[100];
   btSerial.begin(9600); // Open serial communication to Bluetooth unit
   
   //Avstandsmåler
@@ -110,12 +110,13 @@ void setup(){
   while(!button.isPressed() && !isGo){
       updateBTSerial(btSerial);  // Check if we have input on the BT serial port.
   }
-  if(TACTIC = 'd'){    
+  if(TACTIC == 'd'){    
      motors.setSpeeds(SUPER_SPEED, SUPER_SPEED);
   }
-  else if (TACTIC = 'o'){
+  else if (TACTIC == 'o'){
      motors.setSpeeds(TURN_SPEED, -TURN_SPEED);
-     TIMER_M = STANDARD;
+     TIMER_M = -1;
+     TIMER_S = STANDARD;
   }
 }
 
