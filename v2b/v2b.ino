@@ -5,6 +5,8 @@
       - En i midten og en på hver side. Kan dermed snu til venstre og høyre og kjøre mot objekter.
     - Om det har gått STANDARD tid fra en sving skal den snurre i ring og sjekke om den finner noe å kjøre på. 
 */
+#include <Adafruit_MCP23008.h>
+#include <Wire.h>
 #include <ZumoMotors.h>
 #include <Pushbutton.h>
 #include <QTRSensors.h>
@@ -12,22 +14,29 @@
 #include <NewPing.h>
 #include <SoftwareSerial.h>
 #include <PLabBTSerial.h>
+
 #define LED 13
+#define portExpPin 0
+Adafruit_MCP23008 mcp;
+
 //Avstandsmåler
 int ekko_m = 3;
 int ekko_h = 0;
 int ekko_v = A1;
 int trigger1 = 6;
 int maxDistace = 50;
+
 NewPing sonar_m(trigger1, ekko_m, maxDistace);
 NewPing sonar_h(trigger1, ekko_h, maxDistace);
 NewPing sonar_v(trigger1, ekko_v, maxDistace);
+
 //BT
-const int txPin = A1; // Connected to tx on bt unit
-const int rxPin = 0; // Connected to rx on bt unit
-PLabBTSerial btSerial(txPin, rxPin);  
-char msg[100];
-// Diverse kjøre egenskaper
+const int txPin = 0; // Connected to tx on bt unit (port expander)
+const int rxPin = 1; // Connected to rx on bt unit (port expander)
+
+
+
+// Diverse kjøreegenskaper
 #define REVERSE_SPEED     200 // 0 is stopped, 400 is full speed
 #define TURN_SPEED        400
 #define FORWARD_SPEED     200
@@ -35,6 +44,7 @@ char msg[100];
 #define SUPER_DURATION    10
 #define REVERSE_DURATION  250 // ms
 #define TURN_DURATION     200 // ms
+
 char TACTIC = 'o';
 boolean isGo = false;
 //Timer egenskaper
@@ -54,7 +64,7 @@ ZumoReflectanceSensorArray sensors;
 // Overflate Treshold, satt til hvit kant
 #define QTR_THRESHOLD  500 // 
 
-void updateBTSerial() {
+void updateBTSerial(PLabBTSerial& btSerial) {
   int availableCount = btSerial.available();
   if (availableCount > 0) {
     btSerial.read(msg, availableCount);
@@ -85,25 +95,32 @@ void BTSerialMessageReceived(String msgString,int msgValue) {
 }
 
 void setup(){
-   Serial.begin(9600);
-   btSerial.begin(9600); // Open serial communication to Bluetooth unit
-   //Avstandsmåler
-   pinMode(trigger1,OUTPUT);
-   pinMode(ekko_m, INPUT);
-   pinMode(ekko_h, INPUT);
-   pinMode(ekko_v, INPUT);
-   sensors.init();
-   //BT henting
-   while(!button.isPressed() && !isGo){
-       updateBTSerial();  // Check if we have input on the BT serial port.
-   }
-   if(TACTIC = 'd'){    
-      motors.setSpeeds(SUPER_SPEED, SUPER_SPEED);
-   }
-   else if (TACTIC = 'o'){
-      motors.setSpeeds(TURN_SPEED, -TURN_SPEED);
-      TIMER_M = STANDARD;
-   }
+  mcp.begin(portExpPin);
+  mcp.pinMode(0, INPUT);
+  mcp.pinMode(1, INPUT);
+  
+  Serial.begin(9600);
+  PLabBTSerial btSerial(txPin, rxPin);  
+  char msg[100];
+  btSerial.begin(9600); // Open serial communication to Bluetooth unit
+  
+  //Avstandsmåler
+  pinMode(trigger1,OUTPUT);
+  pinMode(ekko_m, INPUT);
+  //pinMode(ekko_h, INPUT);
+  //pinMode(ekko_v, INPUT);
+  sensors.init();
+  //BT henting
+  while(!button.isPressed() && !isGo){
+      updateBTSerial(btSerial);  // Check if we have input on the BT serial port.
+  }
+  if(TACTIC = 'd'){    
+     motors.setSpeeds(SUPER_SPEED, SUPER_SPEED);
+  }
+  else if (TACTIC = 'o'){
+     motors.setSpeeds(TURN_SPEED, -TURN_SPEED);
+     TIMER_M = STANDARD;
+  }
 }
 
 void loop(){
