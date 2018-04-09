@@ -115,6 +115,7 @@ void setup(){
   }
   else if (TACTIC == 'o'){
      motors.setSpeeds(TURN_SPEED, -TURN_SPEED);
+     time1 = millis();
      TIMER_M = -1;
      TIMER_S = STANDARD;
   }
@@ -126,7 +127,6 @@ void loop(){
       //Leser avstand mid       
       unsigned int tid_m = sonar_m.ping();    
       float avstand_m = sonar_m.convert_cm(tid_m);
-      
       //Sjekker noe svart underlag      
       if (sensor_values[0] > QTR_THRESHOLD && sensor_values[5] > QTR_THRESHOLD){   
           //Sjekker noe mid
