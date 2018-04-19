@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?emfs /fxcontroller/Example1.fxml; ?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<HBox xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MyController">
+   <children>
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="559.0" prefWidth="416.0">
+         <children>
+            <Button layoutX="14.0" layoutY="22.0" mnemonicParsing="false" onAction="#listSerialPorts" text="List serial ports" />
+            <Text layoutX="13.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Serial ports:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <Button layoutX="17.0" layoutY="356.0" mnemonicParsing="false" onAction="#sendText" text="Send message:" />
+            <TextField fx:id="sendTextField" layoutX="139.0" layoutY="357.0" prefHeight="27.0" prefWidth="261.0" />
+            <TextArea fx:id="textReceivedArea" layoutX="14.0" layoutY="412.0" prefHeight="138.0" prefWidth="386.0" />
+            <Text layoutX="16.0" layoutY="405.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Message received:">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+            <ListView fx:id="myListView" layoutX="13.0" layoutY="127.0" prefHeight="194.0" prefWidth="386.0" />
+            <Button layoutX="139.0" layoutY="22.0" mnemonicParsing="false" onAction="#openSelectedPort" text="Open selected port" />
+            <Button layoutX="285.0" layoutY="22.0" mnemonicParsing="false" onAction="#closePort" text="Close port" />
+            <Button layoutX="13.0" layoutY="61.0" mnemonicParsing="false" onAction="#openPLabPort" text="Open PLab port" />
+            <Text layoutX="17.0" layoutY="344.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Message format: String or String, int">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Rectangle arcWidth="5.0" fill="#666666" height="559.0" stroke="TRANSPARENT" strokeType="INSIDE" width="1.0" />
+      <AnchorPane prefHeight="559.0" prefWidth="557.0">
+         <children>
+            <Button layoutX="86.0" layoutY="79.0" mnemonicParsing="false" onAction="#defensiveButtonClick" prefHeight="53.0" prefWidth="386.0" text="Defensive Mode" />
+            <Button layoutX="86.0" layoutY="154.0" mnemonicParsing="false" onAction="#offensiveButtonClick" prefHeight="53.0" prefWidth="386.0" text="Offensive Mode" />
+            <Button layoutX="86.0" layoutY="366.0" mnemonicParsing="false" onAction="#goButtonClick" prefHeight="131.0" prefWidth="386.0" text="Go!">
+               <font>
+                  <Font name="System Bold" size="59.0" />
+               </font>
+            </Button>
+            <Text layoutX="241.0" layoutY="252.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mode:">
+               <font>
+                  <Font size="26.0" />
+               </font>
+            </Text>
+            <Text fx:id="currentMode" layoutX="86.0" layoutY="297.0" strokeType="OUTSIDE" strokeWidth="0.0" text="MODE NOT SET" textAlignment="CENTER" wrappingWidth="385.99998549744487">
+               <font>
+                  <Font size="43.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
+   </children>
+</HBox>
